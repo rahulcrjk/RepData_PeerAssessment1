@@ -10,11 +10,6 @@ This analysis makes use of data from a personal activity monitoring device. This
 
 ## Data
   
-The data for this assignment can be downloaded from the following link:
-al 
-[Download Activity monitoring data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip)
-
-
 The variables included in this dataset are:
 
 1. steps: Number of steps taking in a 5-minute interval (missing values are coded as NA)
@@ -27,6 +22,8 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 ## Loading the data
 
 ```{r}
+if(!file.exists("activity.csv"))
+  unzip("activity.zip")
 data <- read.csv("activity.csv")
 ```
 ## What is mean total number of steps taken per day?
@@ -53,11 +50,14 @@ dataNoNA <- na.omit(ddply(data,"date", summarise,total = sum(steps)))
 hist(dataNoNA$total,main = "Histogram of total number of steps per day",xlab = "Values", ylim = c(0,30),col = "dark red")
 ```
 
-**Mean and Median calculations.**
-```{r}
-summData <- na.omit(ddply(data,"date", summarise,Mean = mean(steps,na.rm = TRUE), Median = median(steps,na.rm = TRUE)))
-kable(summData,format = "markdown")
-```
+### Mean and Median reports.
+
+
+1. The mean of total number of steps is **`r mean(data$steps,na.rm = TRUE)`.**
+
+2. The median of total number of steps is **`r median(data$steps,na.rm = TRUE)`.**
+
+
 ## What is the average daily activity pattern?
 
 **Summarise the data according to the 5 minute intervals and generate a time series plot.**
@@ -72,17 +72,17 @@ plot(avgDap[[1]],avgDap[[2]],type = "l",
 
 **Report the 5-minute interval that, on average, contains the maximum number of steps**
 
-```
-The 5-minute interval that, on average, contains the maximum number of steps is `r avgDap[avgDap[[2]] == max(avgDap[[2]]),1]`.
-```
+
+* The 5-minute interval that, on average, contains the maximum number of steps is **`r avgDap[avgDap[[2]] == max(avgDap[[2]]),1]`.**
+
 
 
 ## Imputing missing values
 
 **Reporting missing values in the data set**
-```
-The total number of missing values in the data set is `r sum(is.na(data$steps))`.
-```
+
+* The total number of missing values in the data set is **`r sum(is.na(data$steps))`.**
+
 **Strategy for filling in missing values in the data set.**
 
 The mean or median for a day may not be a good choice to replace as some days have completely NA filled in. A better approach would be to use the mean for that particular 5 minute interval.
@@ -93,6 +93,8 @@ Steps are as follows:
 2. Since *merge* messes with the order of the list we will also reorder as per the date.
 3. Now we use the *Mean*(of steps/interval) column to replace the NA values in the *steps* column. 
 
+
+**Create new data set with missing data filled in**
 ```{r}
 newData <- merge(data,avgDap,all.x = TRUE, sort = FALSE)
 newData <- newData[order(newData$date),]
@@ -100,17 +102,13 @@ for(i in 1:length(newData$steps)){
     if(is.na(newData[i,2]))
       newData[i,2] <- newData[i,4]
 }
-```
-**New data set with missing data filled in**
-```{r}
 newData <- newData[c(2,3,1)]
-
 ```
 
-The **first 50 rows (ONLY)** of the new data set is as below: 
+The **first 25 rows (ONLY)** of the new data set is as below: 
 
 ```{r}
-kable(head(newData,50))
+kable(head(newData,25))
 ```
 **Comparison of new data with original data for analysis**
 
@@ -120,37 +118,33 @@ newDataWithTotal <- ddply(newData,"date", summarise,total = sum(steps))
 hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
 ```
 
-Now we will calculate the mean and median values using the new data set
-```{r}
-summNewData <- ddply(newData,"date", summarise,Mean = mean(steps), Median = median(steps))
-kable(summNewData,format = "markdown")
-```
-
-**Comparison of Mean Median results with that obtained from raw Data.**
-
-**The below call to *kable* function may give an error due to a bug in older versions. Please make sure that you have the latest version of *knitr* installed.** 
+### Mean and Median reports 
 
 
-```{r}
-kable(merge(summData,summNewData,by = "date",all.y = TRUE ))
-```
-**Impact of imputing missing data**
+1. The mean of total number of steps is **`r mean(newData$steps,na.rm = TRUE)`.**
 
-From the above table we can see that:
+2. The median of total number of steps is **`r median(newData$steps,na.rm = TRUE)`.**
 
-1. For rows for which data is available for steps in raw data, the mean remains the same. 
-2. For rows for which data is not available for steps(NA) in raw data, we have new values for mean. Earlier we could not calculate this due to non-availability of data. 
-3. For rows for which data is available for steps in raw data, the median value remains the same. Earlier we could not calculate this due to non-availability of data.
-4. For rows for which data is not available for steps(NA) in raw data, we have new non-zero values for median. Earlier there were none.
+### Comparison and Impact
+
+* It can be seen when NA has been substituted with the  mean for that particular 5 minute interval there is **no change** in the mean(37.3826) or median(0) of the total number of steps taken per day.Hence there is **no impact** of the substitution strategy adopted. 
+
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 We will create a new column to the NA removed data set - newData - with just "weekday". Now wherever as per date it is a Saturday or a Sunday the value "Weekend" is substituted. We then convert the column to a factor. 
+
+**Create weekend weekday factor variable column**
+
 ```{r}
 newData$daytype <- "weekday"
 newData[weekdays(as.Date(newData$date)) %in% c("Saturday","Sunday"),]$daytype <- "weekend"
 newData$daytype <- as.factor(newData$daytype)
 ```
+**Panel plot for weekend vs weekday data**
+
+
 Create a data set with average number of steps taken in each interval averaged across all weekdays or weekends. Then use this to create a panel plot. 
 
 ```{r}
@@ -162,4 +156,4 @@ if(!require(lattice)){
 xyplot(Mean ~ interval | daytype,data = avgIntStepsByDayType,type = "l",layout = c(1,2),col = "blue1",ylab = "Number of steps", xlab = "Interval")
 ```
 
-From the above plot it can be seen that there is peak in the number of steps at around 835 interval in the weekedn probablly indicating a workout period. Even during weekend there is an increase in the number of steps at around this interval probably indicating a brief work out or probably just the early morning activities. Weekend number of steps from around the interval 1000 seems to be quite less. 
+From the above plot it can be seen that there is a peak in the number of steps at around 835 interval in the weekend probably indicating a workout period. Even during weekend there is an increase in the number of steps at around this interval probably indicating a brief work out or probably just the early morning activities. Weekend number of steps from around the interval 1000 seems to be quite less. 
