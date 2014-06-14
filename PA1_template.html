@@ -221,7 +221,7 @@ data &lt;- read.csv(&quot;activity.csv&quot;)
 <ul>
 <li>The <em>plyr</em> package is being used.</li>
 <li>For this analysis we will ignore the NA rows by using the na.omit function</li>
-<li><strong>Dates with NA rows are ignored</strong> for mean and median calculations and the result is displayed in a table.</li>
+<li><strong>Dates with NA rows are ignored</strong> for mean and median calculations.</li>
 </ul>
 
 <pre><code class="r">if(!require(plyr)){
@@ -233,8 +233,8 @@ data &lt;- read.csv(&quot;activity.csv&quot;)
 <pre><code>## Loading required package: plyr
 </code></pre>
 
-<pre><code class="r">dataNoNA &lt;- na.omit(ddply(data,&quot;date&quot;, summarise,total = sum(steps)))
-hist(dataNoNA$total,main = &quot;Histogram of total number of steps per day&quot;,
+<pre><code class="r">dataNoNA &lt;- na.omit(ddply(data,&quot;date&quot;, summarise,totalSteps = sum(steps)))
+hist(dataNoNA$totalSteps,main = &quot;Histogram of total number of steps per day&quot;,
      xlab = &quot;Values&quot;, ylim = c(0,30),col = &quot;dark red&quot;)
 </code></pre>
 
@@ -243,8 +243,8 @@ hist(dataNoNA$total,main = &quot;Histogram of total number of steps per day&quot
 <h3>Mean and Median reports.</h3>
 
 <ol>
-<li><p>The mean of total number of steps is <strong>37.3826.</strong></p></li>
-<li><p>The median of total number of steps is <strong>0.</strong></p></li>
+<li><p>The mean of total number of steps is <strong>1.0766 &times; 10<sup>4</sup>.</strong></p></li>
+<li><p>The median of total number of steps is <strong>10765.</strong></p></li>
 </ol>
 
 <h2>What is the average daily activity pattern?</h2>
@@ -338,8 +338,8 @@ newData &lt;- newData[c(2,3,1)]
 
 <p>First we will make a histogram after calculating the total number of steps using the new data. </p>
 
-<pre><code class="r">newDataWithTotal &lt;- ddply(newData,&quot;date&quot;, summarise,total = sum(steps))
-hist(newDataWithTotal$total,main = &quot;Histogram of total number of steps per day(new Data)&quot;,
+<pre><code class="r">newDataWithTotal &lt;- ddply(newData,&quot;date&quot;, summarise,totalSteps = sum(steps))
+hist(newDataWithTotal$totalSteps,main = &quot;Histogram of total number of steps per day(new Data)&quot;,
      xlab = &quot;Values&quot;, ylim = c(0,40),col = &quot;mediumspringgreen&quot;)
 </code></pre>
 
@@ -348,15 +348,13 @@ hist(newDataWithTotal$total,main = &quot;Histogram of total number of steps per 
 <h3>Mean and Median reports</h3>
 
 <ol>
-<li><p>The mean of total number of steps is <strong>37.3826.</strong></p></li>
-<li><p>The median of total number of steps is <strong>0.</strong></p></li>
+<li><p>The mean of total number of steps is <strong>1.0766 &times; 10<sup>4</sup>.</strong></p></li>
+<li><p>The median of total number of steps is <strong>1.0766 &times; 10<sup>4</sup>.</strong></p></li>
 </ol>
 
 <h3>Comparison and Impact</h3>
 
-<ul>
-<li>It can be seen when NA has been substituted with the  mean for that particular 5 minute interval there is <strong>no change</strong> in the mean(37.3826) or median(0) of the total number of steps taken per day.Hence there is <strong>no impact</strong> of the substitution strategy adopted. </li>
-</ul>
+<p>It can be seen when NA has been substituted with the  mean for that particular 5 minute interval there is no change in the mean(10766) but median without NA substitution was 10765 and after substitution is 10766. Hence the input of substitution strategy is minimal</p>
 
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 

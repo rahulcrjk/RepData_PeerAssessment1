@@ -39,7 +39,7 @@ It is to be noted that
 
 * The *plyr* package is being used.
 * For this analysis we will ignore the NA rows by using the na.omit function
-* **Dates with NA rows are ignored** for mean and median calculations and the result is displayed in a table.
+* **Dates with NA rows are ignored** for mean and median calculations.
 
 
 ```r
@@ -54,8 +54,8 @@ if(!require(plyr)){
 ```
 
 ```r
-dataNoNA <- na.omit(ddply(data,"date", summarise,total = sum(steps)))
-hist(dataNoNA$total,main = "Histogram of total number of steps per day",
+dataNoNA <- na.omit(ddply(data,"date", summarise,totalSteps = sum(steps)))
+hist(dataNoNA$totalSteps,main = "Histogram of total number of steps per day",
      xlab = "Values", ylim = c(0,30),col = "dark red")
 ```
 
@@ -64,9 +64,9 @@ hist(dataNoNA$total,main = "Histogram of total number of steps per day",
 ### Mean and Median reports.
 
 
-1. The mean of total number of steps is **37.3826.**
+1. The mean of total number of steps is **1.0766 &times; 10<sup>4</sup>.**
 
-2. The median of total number of steps is **0.**
+2. The median of total number of steps is **10765.**
 
 
 ## What is the average daily activity pattern?
@@ -163,8 +163,8 @@ kable(head(newData,25))
 First we will make a histogram after calculating the total number of steps using the new data. 
 
 ```r
-newDataWithTotal <- ddply(newData,"date", summarise,total = sum(steps))
-hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",
+newDataWithTotal <- ddply(newData,"date", summarise,totalSteps = sum(steps))
+hist(newDataWithTotal$totalSteps,main = "Histogram of total number of steps per day(new Data)",
      xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
 ```
 
@@ -173,13 +173,13 @@ hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(n
 ### Mean and Median reports 
 
 
-1. The mean of total number of steps is **37.3826.**
+1. The mean of total number of steps is **1.0766 &times; 10<sup>4</sup>.**
 
-2. The median of total number of steps is **0.**
+2. The median of total number of steps is **1.0766 &times; 10<sup>4</sup>.**
 
 ### Comparison and Impact
 
-* It can be seen when NA has been substituted with the  mean for that particular 5 minute interval there is **no change** in the mean(37.3826) or median(0) of the total number of steps taken per day.Hence there is **no impact** of the substitution strategy adopted. 
+It can be seen when NA has been substituted with the  mean for that particular 5 minute interval there is no change in the mean(10766) but median without NA substitution was 10765 and after substitution is 10766. Hence the input of substitution strategy is minimal
 
 
 
