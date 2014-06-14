@@ -47,7 +47,8 @@ if(!require(plyr)){
 }
   
 dataNoNA <- na.omit(ddply(data,"date", summarise,total = sum(steps)))
-hist(dataNoNA$total,main = "Histogram of total number of steps per day",xlab = "Values", ylim = c(0,30),col = "dark red")
+hist(dataNoNA$total,main = "Histogram of total number of steps per day",
+     xlab = "Values", ylim = c(0,30),col = "dark red")
 ```
 
 ### Mean and Median reports.
@@ -115,7 +116,8 @@ kable(head(newData,25))
 First we will make a histogram after calculating the total number of steps using the new data. 
 ```{r}
 newDataWithTotal <- ddply(newData,"date", summarise,total = sum(steps))
-hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
+hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",
+     xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
 ```
 
 ### Mean and Median reports 
@@ -153,7 +155,8 @@ if(!require(lattice)){
   install.packages("lattice")
   require(lattice)
 }
-xyplot(Mean ~ interval | daytype,data = avgIntStepsByDayType,type = "l",layout = c(1,2),col = "blue1",ylab = "Number of steps", xlab = "Interval")
+xyplot(Mean ~ interval | daytype,data = avgIntStepsByDayType,type = "l",
+       layout = c(1,2),col = "blue1",ylab = "Number of steps", xlab = "Interval")
 ```
 
 From the above plot it can be seen that there is a peak in the number of steps at around 835 interval in the weekend probably indicating a workout period. Even during weekend there is an increase in the number of steps at around this interval probably indicating a brief work out or probably just the early morning activities. Weekend number of steps from around the interval 1000 seems to be quite less. 

@@ -55,7 +55,8 @@ if(!require(plyr)){
 
 ```r
 dataNoNA <- na.omit(ddply(data,"date", summarise,total = sum(steps)))
-hist(dataNoNA$total,main = "Histogram of total number of steps per day",xlab = "Values", ylim = c(0,30),col = "dark red")
+hist(dataNoNA$total,main = "Histogram of total number of steps per day",
+     xlab = "Values", ylim = c(0,30),col = "dark red")
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
@@ -163,7 +164,8 @@ First we will make a histogram after calculating the total number of steps using
 
 ```r
 newDataWithTotal <- ddply(newData,"date", summarise,total = sum(steps))
-hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
+hist(newDataWithTotal$total,main = "Histogram of total number of steps per day(new Data)",
+     xlab = "Values", ylim = c(0,40),col = "mediumspringgreen")
 ```
 
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
@@ -212,7 +214,8 @@ if(!require(lattice)){
 ```
 
 ```r
-xyplot(Mean ~ interval | daytype,data = avgIntStepsByDayType,type = "l",layout = c(1,2),col = "blue1",ylab = "Number of steps", xlab = "Interval")
+xyplot(Mean ~ interval | daytype,data = avgIntStepsByDayType,type = "l",
+       layout = c(1,2),col = "blue1",ylab = "Number of steps", xlab = "Interval")
 ```
 
 ![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
